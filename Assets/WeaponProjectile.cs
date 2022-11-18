@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class WeaponProjectile : MonoBehaviour
 {
-	public GameObject ProjectilePrefab;
-	public float Damage = 5f;
-	public float ShotsPerSecond = 4f;
-	public bool Automatic = true;
-	public int ProjectilesPerShot = 1;
-	public float ProjectileSpeed = 40f;
-	public float ProjectileStartOffset = 1f;
-	public float ProjectileLifetime = 2f;
-	public float SpreadDegrees = 2f;
+	public GameObject projectilePrefab;
+	public float damage = 5f;
+	public float shotsPerSecond = 4f;
+	public bool automatic = true;
+	public int projectilesPerShot = 1;
+	public float projectileSpeed = 40f;
+	public float projectileStartOffset = 1f;
+	public float projectileLifetime = 2f;
+	public float spreadDegrees = 2f;
 
 	private bool firing = false;
 	private float nextShotTimestamp = 0f;
@@ -39,12 +39,12 @@ public class WeaponProjectile : MonoBehaviour
 		{
 			if (readyToFire)
 			{
-				if (ShotsPerSecond > 0f)
-					nextShotTimestamp = Time.time + (1f / ShotsPerSecond);
+				if (shotsPerSecond > 0f)
+					nextShotTimestamp = Time.time + (1f / shotsPerSecond);
 
 				Shoot();
 
-				if (!Automatic)
+				if (!automatic)
 					firing = false;
 			}
 		}
@@ -53,12 +53,12 @@ public class WeaponProjectile : MonoBehaviour
 	///////////////////////////////////////////////////////////////////////////
 	private void Shoot()
 	{
-		var projectiles = new List<Projectile>(ProjectilesPerShot);
-		for (int i = 0; i < ProjectilesPerShot; i++)
+		var projectiles = new List<Projectile>(projectilesPerShot);
+		for (int i = 0; i < projectilesPerShot; i++)
 		{
-			GameObject obj = Instantiate(ProjectilePrefab,
+			GameObject obj = Instantiate(projectilePrefab,
 				transform.position +
-				(transform.up * ProjectileStartOffset),
+				(transform.up * projectileStartOffset),
 				Quaternion.identity);
 
 			if (!obj)
@@ -68,20 +68,20 @@ public class WeaponProjectile : MonoBehaviour
 
             Projectile p = obj.GetComponent<Projectile>();
 			p.parent = this;
-            p.Faction = wielder.Faction;
-            p.CharacterClass = wielder.CharacterClass;
-            p.Damage = Damage;
-            p.TimeToLive = ProjectileLifetime;
+            p.faction = wielder.faction;
+            p.characterClass = wielder.characterClass;
+            p.damage = damage;
+            p.timeToLive = projectileLifetime;
 
-			if (SpreadDegrees > 0f)
+			if (spreadDegrees > 0f)
 			{
 				float ang = Vector2.SignedAngle(Vector2.right, transform.up);
-				ang += Random.Range(SpreadDegrees * -0.5f, SpreadDegrees * 0.5f);
-				p.velocity = Ang2Vec2(ang) * ProjectileSpeed;
+				ang += Random.Range(spreadDegrees * -0.5f, spreadDegrees * 0.5f);
+				p.velocity = Ang2Vec2(ang) * projectileSpeed;
 			}
 			else
 			{
-				p.velocity = transform.up * ProjectileSpeed;
+				p.velocity = transform.up * projectileSpeed;
 			}
 
 			projectiles.Add(p);

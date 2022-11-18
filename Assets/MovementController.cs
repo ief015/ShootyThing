@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MovementController : MonoBehaviour
 {
-	public float MoveSpeed = 5f;
+	public float moveSpeed = 5f;
 
 	private Rigidbody2D rbody;
 	private Vector2 moveDir = Vector2.zero;
@@ -48,7 +48,7 @@ public class MovementController : MonoBehaviour
 	///////////////////////////////////////////////////////////////////////////
 	void FixedUpdate()
 	{
-		Vector2 move = moveDir * MoveSpeed;
+		Vector2 move = moveDir * moveSpeed;
 
 		rbody.MovePosition(rbody.position + (move * Time.fixedDeltaTime));
 

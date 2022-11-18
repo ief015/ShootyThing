@@ -6,10 +6,10 @@ using UnityEngine;
 
 public class Character : MonoBehaviour
 {
-	public float InitialHealth = -1f;
-	[Min(0f)] public float MaxHealth = 20f;
-	public string Faction = "";
-	public string CharacterClass = "";
+	public float initialHealth = -1f;
+	[Min(0f)] public float maxHealth = 20f;
+	public string faction = "";
+	public string characterClass = "";
 
 	public float currentHealth { get; private set; }
 
@@ -30,8 +30,8 @@ public class Character : MonoBehaviour
 	///////////////////////////////////////////////////////////////////////////
 	public override string ToString()
 	{
-		var faction = Faction == "" ? "[No Faction]" : Faction;
-		var charClass = CharacterClass == "" ? "[No Class]" : CharacterClass;
+		var faction = this.faction == "" ? "[No Faction]" : this.faction;
+		var charClass = characterClass == "" ? "[No Class]" : characterClass;
 
         return base.ToString() + ":" + faction + "." + charClass;
 	}
@@ -39,14 +39,14 @@ public class Character : MonoBehaviour
 	///////////////////////////////////////////////////////////////////////////
 	void Awake()
 	{
-		currentHealth = InitialHealth >= 0 ? InitialHealth : MaxHealth;
+		currentHealth = initialHealth >= 0 ? initialHealth : maxHealth;
 		movement = GetComponent<MovementController>();
 	}
 
 	///////////////////////////////////////////////////////////////////////////
 	void OnDrawGizmos()
 	{
-		if (MaxHealth <= 0f)
+		if (maxHealth <= 0f)
 			return;
 
 		Vector3 startHPBar = new Vector3(-0.5f, 1f, 0f) + transform.position;
@@ -55,7 +55,7 @@ public class Character : MonoBehaviour
 		Gizmos.color = Color.red;
 		Gizmos.DrawLine(startHPBar, endHPBar);
 
-		float hp = currentHealth / MaxHealth;
+		float hp = currentHealth / maxHealth;
 		Gizmos.color = Color.green;
 		Gizmos.DrawLine(startHPBar, Vector3.Lerp(startHPBar, endHPBar, hp));
 	}

@@ -18,19 +18,19 @@ public class AIBehaviour : MonoBehaviour
 	private MovementController movement;
 	private WeaponProjectile weapon;
 
-	public float FieldOfView = 180f;
-	public float TravelDistance = 2f;
-	public float WanderTimeSeconds = 20f;
-	public bool AllowInfighting = true;
+	public float fieldOfView = 180f;
+	public float travelDistance = 2f;
+	public float wanderTimeSeconds = 20f;
+	public bool allowInfighting = true;
 
-	public bool IsMoving { get; private set; }
-	public Vector2 MoveDestination { get; private set; }
+	public bool isMoving { get; private set; }
+	public Vector2 moveDestination { get; private set; }
 	private float moveStopTimestamp = 0f;
 	private float moveMinDistance = 0f;
 	private float wanderTimeout = 0f;
 
 	[Range(0f,1f)]
-	public float Aggression = 0.25f;
+	public float aggression = 0.25f;
 
 
 	///////////////////////////////////////////////////////////////////////////
@@ -40,8 +40,8 @@ public class AIBehaviour : MonoBehaviour
 		movement = GetComponent<MovementController>();
 		weapon   = GetComponent<WeaponProjectile>();
 
-		IsMoving = false;
-		MoveDestination = Vector2.zero;
+		isMoving = false;
+		moveDestination = Vector2.zero;
 
 		self.OnDamaged += OnDamaged;
 		weapon.OnShoot += OnShoot;
@@ -61,10 +61,10 @@ public class AIBehaviour : MonoBehaviour
 		Gizmos.color = target ? Color.green : Color.yellow;
 		Gizmos.DrawSphere(transform.position + new Vector3(-0.2f, 0.2f), 0.1f);
 
-		if (IsMoving)
+		if (isMoving)
 		{
 			Gizmos.color = new Color(1f, 1f, 1f, 0.25f);
-			Gizmos.DrawLine(transform.position, MoveDestination);
+			Gizmos.DrawLine(transform.position, moveDestination);
 		}
 	}
 
@@ -98,14 +98,14 @@ public class AIBehaviour : MonoBehaviour
 			//ResetSleepTimeout();
 		}
 
-		if (IsMoving)
+		if (isMoving)
 		{
 			if (!targetLastSeenPositionVisited)
 			{
 				if ((targetLastSeenPosition - self.position).sqrMagnitude < 1f)
 				{
 					targetLastSeenPositionVisited = true;
-					wanderTimeout = Time.time + WanderTimeSeconds;
+					wanderTimeout = Time.time + wanderTimeSeconds;
                 }
 			}
 		}
@@ -131,7 +131,7 @@ public class AIBehaviour : MonoBehaviour
 		{
 			if (weapon.readyToFire)
 			{
-				if (Random.value <= Aggression)
+				if (Random.value <= aggression)
 				{
 					StopMoving();
 					weapon.StartFire();
@@ -145,7 +145,7 @@ public class AIBehaviour : MonoBehaviour
 				weapon.StopFire();
 			}
 
-			if (!IsMoving)
+			if (!isMoving)
 			{
 				if (targetLastSeenPositionVisited)
 				{
@@ -173,14 +173,14 @@ public class AIBehaviour : MonoBehaviour
 	///////////////////////////////////////////////////////////////////////////
 	private void DoMovement()
 	{
-		if (IsMoving)
+		if (isMoving)
 		{
 			if (Time.time > moveStopTimestamp)
 			{
 				// Give up trying to move to destination
 				StopMoving();
 			}
-			else if ((MoveDestination - self.position).sqrMagnitude
+			else if ((moveDestination - self.position).sqrMagnitude
 					 < moveMinDistance * moveMinDistance)
 			{
 				// Reached destination
@@ -189,7 +189,7 @@ public class AIBehaviour : MonoBehaviour
 			else
 			{
 				// Keep moving
-				movement.Move(MoveDestination - self.position);
+				movement.Move(moveDestination - self.position);
 			}
 		}
 		else
@@ -254,7 +254,7 @@ public class AIBehaviour : MonoBehaviour
 		foreach (Collider2D col in chars)
 		{
 			Character ch = col.GetComponent<Character>();
-			if (ch && ch.Faction != self.Faction)
+			if (ch && ch.faction != self.faction)
 			{
 				if (CanSee(ch))
 				{
@@ -325,7 +325,7 @@ public class AIBehaviour : MonoBehaviour
 		// Check if target outside field of view
 		float ang = Vector2.SignedAngle(movement.lookDirection,
 			ch.position - self.position);
-		if (Mathf.Abs(ang) > FieldOfView * 0.5f)
+		if (Mathf.Abs(ang) > fieldOfView * 0.5f)
 			return false;
 		return true;
 	}
@@ -342,13 +342,13 @@ public class AIBehaviour : MonoBehaviour
 	/// </param>
 	public void MoveTowards(Vector2 destination, float minDistance = 0.5f, float timeout = -1f)
 	{
-		if (movement.MoveSpeed <= 0f)
+		if (movement.moveSpeed <= 0f)
 			return;
 
 		if (timeout < 0f)
 		{
 			float dist = (destination - self.position).magnitude;
-			float speed = movement.MoveSpeed;
+			float speed = movement.moveSpeed;
 			timeout = dist / speed * 2f; // double for leeway
 		}
 		else if (timeout == 0f)
@@ -356,13 +356,13 @@ public class AIBehaviour : MonoBehaviour
 			moveStopTimestamp = float.PositiveInfinity;
         }
 
-        MoveDestination = destination;
+        moveDestination = destination;
 		moveMinDistance = Mathf.Max(0f, minDistance);
 		moveStopTimestamp = Time.time + timeout;
 
-		movement.LookTowards(MoveDestination, 360f);
+		movement.LookTowards(moveDestination, 360f);
 
-		IsMoving = true;
+		isMoving = true;
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -372,7 +372,7 @@ public class AIBehaviour : MonoBehaviour
     public void Wander()
     {
         MoveTowards(self.position
-            + Random.insideUnitCircle.normalized * TravelDistance,
+            + Random.insideUnitCircle.normalized * travelDistance,
             0.5f, Random.Range(0.25f, 1f));
     }
 
@@ -383,7 +383,7 @@ public class AIBehaviour : MonoBehaviour
     public void AdvanceTowardsTarget()
     {
         MoveTowards(targetLastSeenPosition
-            + Random.insideUnitCircle.normalized * TravelDistance,
+            + Random.insideUnitCircle.normalized * travelDistance,
             0.5f, Random.Range(0.25f, 1f));
     }
 
@@ -393,7 +393,7 @@ public class AIBehaviour : MonoBehaviour
     /// </summary>
     public void StopMoving()
 	{
-		IsMoving = false;
+		isMoving = false;
 	}
 
 	///////////////////////////////////////////////////////////////////////////
@@ -405,13 +405,13 @@ public class AIBehaviour : MonoBehaviour
         //    return;
 		//}
 
-		if (IsMoving)
+		if (isMoving)
 		{
 			Vector2 norm = collision.GetContact(0).normal;
 			Vector2 reflect = Vector2.Reflect(movement.moveDirection, norm);
 
 			// Bumping into something, move around a bit
-			MoveTowards(self.position + reflect * TravelDistance,
+			MoveTowards(self.position + reflect * travelDistance,
 				0.5f, Random.Range(0.2f, 0.4f));
 		}
 	}
@@ -419,7 +419,7 @@ public class AIBehaviour : MonoBehaviour
 	///////////////////////////////////////////////////////////////////////////
 	private void OnDamaged(float damage, Character inflictor)
 	{
-		if (inflictor && AllowInfighting)
+		if (inflictor && allowInfighting)
 		{
              SetTarget(inflictor);
         }
@@ -428,7 +428,7 @@ public class AIBehaviour : MonoBehaviour
     ///////////////////////////////////////////////////////////////////////////
     public void OnShoot(Projectile[] projectiles)
 	{
-		if (!weapon.Automatic)
+		if (!weapon.automatic)
 		{
             AdvanceTowardsTarget();
         }

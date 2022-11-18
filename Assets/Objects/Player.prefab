@@ -173,9 +173,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 35c4247077b6ef84bb46d95f2d5890f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  InitialHealth: -1
-  MaxHealth: 100
-  Faction: Player
+  initialHealth: -1
+  maxHealth: 100
+  faction: player
+  characterClass: player
 --- !u!114 &6524482745658088130
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -188,7 +189,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0832e31865cc714fa0f5bf4f26c9241, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  OverrideCamera: {fileID: 0}
+  overrideCamera: {fileID: 0}
   Mode: 1
   SmoothingSpeed: 10
 --- !u!114 &6524482745658088131
@@ -203,9 +204,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0c6e78e39b4c7341bbf549cdd2a2759, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AxisHorizontal: Horizontal
-  AxisVertical: Vertical
-  ButtonFire: Fire1
+  axisHorizontal: Horizontal
+  axisVertical: Vertical
+  buttonFire: Fire1
 --- !u!114 &6524482745658088188
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -218,7 +219,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 82c03de8eebea1a44afdac00a9b76c71, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MoveSpeed: 10
+  moveSpeed: 10
 --- !u!114 &6524482745658088133
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -231,16 +232,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 019e15b5b54099143be5267ee145347d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ProjectilePrefab: {fileID: 900472354771913365, guid: a706afa8af31e8a45804e38b96cfc756,
+  projectilePrefab: {fileID: 900472354771913365, guid: a706afa8af31e8a45804e38b96cfc756,
     type: 3}
-  Damage: 1
-  ShotsPerSecond: 0.8
-  Automatic: 1
-  ProjectilesPerShot: 7
-  ProjectileSpeed: 50
-  ProjectileStartOffset: 0.5
-  ProjectileLifetime: 2
-  SpreadDegrees: 10
+  damage: 3
+  shotsPerSecond: 0.8
+  automatic: 1
+  projectilesPerShot: 8
+  projectileSpeed: 50
+  projectileStartOffset: 0.5
+  projectileLifetime: 2
+  spreadDegrees: 15
 --- !u!1 &6524482746491694435
 GameObject:
   m_ObjectHideFlags: 0

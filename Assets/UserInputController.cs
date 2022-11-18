@@ -7,9 +7,9 @@ public class UserInputController : MonoBehaviour
 	private MovementController movement;
 	private WeaponProjectile weapon;
 
-	public string AxisHorizontal = "Horizontal";
-	public string AxisVertical = "Vertical";
-	public string ButtonFire = "Fire1";
+	public string axisHorizontal = "Horizontal";
+	public string axisVertical = "Vertical";
+	public string buttonFire = "Fire1";
 
 	///////////////////////////////////////////////////////////////////////////
 	void Awake()
@@ -21,13 +21,13 @@ public class UserInputController : MonoBehaviour
 	///////////////////////////////////////////////////////////////////////////
 	void Update()
 	{
-		movement.Move(Input.GetAxisRaw(AxisHorizontal),
-			Input.GetAxisRaw(AxisVertical));
+		movement.Move(Input.GetAxisRaw(axisHorizontal),
+			Input.GetAxisRaw(axisVertical));
 
-		if (Input.GetButtonDown(ButtonFire))
+		if (Input.GetButtonDown(buttonFire))
 			weapon.StartFire();
 
-		if (Input.GetButtonUp(ButtonFire))
+		if (Input.GetButtonUp(buttonFire))
 			weapon.StopFire();
 
 		Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);

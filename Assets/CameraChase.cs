@@ -7,7 +7,7 @@ public class CameraChase : MonoBehaviour
 	/// <summary>
 	/// Set override camera. If none, it will default to the Main Camera.
 	/// </summary>
-	public GameObject OverrideCamera;
+	public GameObject overrideCamera;
 
 	private Camera currentCamera = null;
 
@@ -51,8 +51,8 @@ public class CameraChase : MonoBehaviour
 	///////////////////////////////////////////////////////////////////////////
 	bool CheckCam()
 	{
-		if (OverrideCamera)
-			currentCamera = OverrideCamera.GetComponent<Camera>();
+		if (overrideCamera)
+			currentCamera = overrideCamera.GetComponent<Camera>();
 		else
 			currentCamera = Camera.main;
 		return currentCamera;

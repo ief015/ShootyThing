@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
-	public float Damage = 5f;
-    public float TimeToLive = 2f;
+	public float damage = 5f;
+    public float timeToLive = 2f;
 
 	public Vector2 velocity { get; set; }
 	public WeaponProjectile parent;
-	public string Faction = "";
-	public string CharacterClass = "";
+	public string faction = "";
+	public string characterClass = "";
 
 	public ParticleSystem particlesPrefab;
 
@@ -52,7 +52,7 @@ public class Projectile : MonoBehaviour
 			}
 		}
 
-		if (Time.time >= wakeTimestamp + TimeToLive)
+		if (Time.time >= wakeTimestamp + timeToLive)
 			Destroy(gameObject);
 	}
 
@@ -87,13 +87,13 @@ public class Projectile : MonoBehaviour
 
         if (victim)
         {
-            bool isDiffFaction = Faction == "" || victim.Faction != Faction;
-            bool isDiffClass = CharacterClass == "" || victim.CharacterClass != CharacterClass;
+            bool isDiffFaction = faction == "" || victim.faction != faction;
+            bool isDiffClass = characterClass == "" || victim.characterClass != characterClass;
 
             if (isDiffFaction || isDiffClass)
             {
 				Character inflictor = parent ? parent.GetComponent<Character>() : null;
-                victim.TakeDamage(Damage, inflictor);
+                victim.TakeDamage(damage, inflictor);
                 dealtDamage = true;
             }
         }
