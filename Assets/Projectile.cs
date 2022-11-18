@@ -11,16 +11,18 @@ public class Projectile : MonoBehaviour
 	public WeaponProjectile parent;
 	public string faction = "";
 	public string characterClass = "";
-
-	public ParticleSystem particlesPrefab;
+	
+    public ParticleSystem particlesPrefab;
 
 	private float wakeTimestamp = 0f;
+    private Vector2 lastTracePosition;
 
-	///////////////////////////////////////////////////////////////////////////
-	private void Start()
+    ///////////////////////////////////////////////////////////////////////////
+    private void Start()
 	{
 		wakeTimestamp = Time.time;
-	}
+        lastTracePosition = transform.position;
+    }
 
 	///////////////////////////////////////////////////////////////////////////
 	private void Update()
@@ -30,34 +32,47 @@ public class Projectile : MonoBehaviour
 
 	///////////////////////////////////////////////////////////////////////////
 	private void FixedUpdate()
-	{
-		Vector2 lastPos =
-			transform.position - (Vector3)(velocity * Time.fixedDeltaTime);
-		Vector2 nextPos =
-			transform.position + (Vector3)(velocity * Time.fixedDeltaTime);
+    {
+        // Check if projectile lifetime expired.
+        if (Time.time >= wakeTimestamp + timeToLive)
+        {
+            Destroy(gameObject);
+            return;
+        }
 
-		// Projectiles are ignored
-		RaycastHit2D[] hits = Physics2D.LinecastAll(
-			lastPos, nextPos, ~(LayerMask.GetMask("Projectile")));
-		foreach (RaycastHit2D hit in hits)
+		Vector2 nextPos = transform.position + (Vector3)(velocity * Time.fixedDeltaTime);
+		int mask = ~LayerMask.GetMask("Projectile");
+
+        // Projectiles are ignored.
+        RaycastHit2D[] hits = Physics2D.LinecastAll(lastTracePosition, nextPos, mask);
+        lastTracePosition = transform.position;
+
+        // Check projectile path for collisions.
+        foreach (RaycastHit2D hit in hits)
 		{
-			bool dealtDamage = false;
-			if (TestCollision(hit.collider, ref dealtDamage))
-			{
-                Color? color = dealtDamage ? new Color(1f, 0.2f, 0.2f) : null;
-                float rotation = Vector2.SignedAngle(hit.normal, Vector2.up);
-                MakePoof(hit.point, rotation, color);
-				Destroy(gameObject);
-				return;
-			}
-		}
+			if (!ShouldCollide(hit.collider))
+				continue;
+            
+            var victim = hit.collider.GetComponent<Character>();
+            bool dealDamage = CanDealDamageTo(victim);
 
-		if (Time.time >= wakeTimestamp + timeToLive)
+            if (dealDamage)
+            {
+                Character inflictor = parent ? parent.GetComponent<Character>() : null;
+                victim.TakeDamage(damage, inflictor);
+            }
+
+            Color? color = dealDamage ? new Color(1f, 0.2f, 0.2f) : null;
+            float rotation = Vector2.SignedAngle(hit.normal, Vector2.up);
+            MakePoof(hit.point, rotation, color);
+
 			Destroy(gameObject);
+			return;
+		}
 	}
 
 	///////////////////////////////////////////////////////////////////////////
-	private void MakePoof(Vector2 position, float rotation, Color? color)
+	private void MakePoof(Vector2 position, float rotation = 0f, Color? color = null)
 	{
 		var parts = Instantiate(particlesPrefab);
 		parts.transform.position = position;
@@ -68,45 +83,27 @@ public class Projectile : MonoBehaviour
 			var partSys = parts.GetComponentInChildren<ParticleSystem>().main;
 			partSys.startColor = (Color)color;
         }
-
     }
 
     ///////////////////////////////////////////////////////////////////////////
-    private bool TestCollision(Collider2D collider)
+    private bool ShouldCollide(Collider2D collider)
     {
-		bool tmp = false;
-		return TestCollision(collider, ref tmp);
+		if (!collider)
+			return false;
+
+        // Ignore colliding with our parent.
+        return !parent || parent != collider.GetComponent<WeaponProjectile>();
     }
 
     ///////////////////////////////////////////////////////////////////////////
-    private bool TestCollision(Collider2D collider, ref bool refDealtDamage)
+    private bool CanDealDamageTo(Character victim)
     {
-        var victim = collider.GetComponent<Character>();
+		if (!victim)
+			return false;
 
-        bool dealtDamage = false;
+        bool isDiffFaction = faction == "" || victim.faction != faction;
+        bool isDiffClass = characterClass == "" || victim.characterClass != characterClass;
 
-        if (victim)
-        {
-            bool isDiffFaction = faction == "" || victim.faction != faction;
-            bool isDiffClass = characterClass == "" || victim.characterClass != characterClass;
-
-            if (isDiffFaction || isDiffClass)
-            {
-				Character inflictor = parent ? parent.GetComponent<Character>() : null;
-                victim.TakeDamage(damage, inflictor);
-                dealtDamage = true;
-            }
-        }
-
-		refDealtDamage = dealtDamage;
-
-        // If we have a parent weapon,
-        // ... check if we're hitting our parent character,
-        // ... if so, ignore it
-        if (!parent || parent != collider.GetComponent<WeaponProjectile>())
-            return true; //> Physical contact happened
-
-        // Continue testing any other collisions
-        return false;
+		return isDiffFaction || isDiffClass;
     }
 }
