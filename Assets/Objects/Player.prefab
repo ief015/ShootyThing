@@ -206,6 +206,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   axisHorizontal: Horizontal
   axisVertical: Vertical
+  axisShiftMove: Shift
   buttonFire: Fire1
 --- !u!114 &6524482745658088188
 MonoBehaviour:
@@ -220,6 +221,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 10
+  moveSpeedShift: 5
 --- !u!114 &6524482745658088133
 MonoBehaviour:
   m_ObjectHideFlags: 0

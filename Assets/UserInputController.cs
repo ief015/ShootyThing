@@ -9,6 +9,7 @@ public class UserInputController : MonoBehaviour
 
 	public string axisHorizontal = "Horizontal";
 	public string axisVertical = "Vertical";
+	public string axisShiftMove = "Shift";
 	public string buttonFire = "Fire1";
 
 	///////////////////////////////////////////////////////////////////////////
@@ -21,14 +22,21 @@ public class UserInputController : MonoBehaviour
 	///////////////////////////////////////////////////////////////////////////
 	void Update()
 	{
-		movement.Move(Input.GetAxisRaw(axisHorizontal),
-			Input.GetAxisRaw(axisVertical));
+		float axisHoriz = Input.GetAxisRaw(axisHorizontal);
+		float axisVert = Input.GetAxisRaw(axisVertical);
+
+		movement.Move(axisHoriz, axisVert);
+		movement.shift = Input.GetAxisRaw(axisShiftMove) > 0;
 
 		if (Input.GetButtonDown(buttonFire))
+		{
 			weapon.StartFire();
+		}
 
 		if (Input.GetButtonUp(buttonFire))
+		{
 			weapon.StopFire();
+		}
 
 		Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 		movement.LookTowards(mousePos);

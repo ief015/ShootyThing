@@ -5,11 +5,13 @@ using UnityEngine;
 public class MovementController : MonoBehaviour
 {
 	public float moveSpeed = 5f;
+	public float moveSpeedShift = 2f;
 
 	private Rigidbody2D rbody;
 	private Vector2 moveDir = Vector2.zero;
 	private Vector2 lookDir = Vector2.up;
 	private float rotationSpeed = 0f;
+	private bool shiftActive = false;
 
 	///////////////////////////////////////////////////////////////////////////
 	/// <summary>
@@ -39,6 +41,16 @@ public class MovementController : MonoBehaviour
 	}
 
 	///////////////////////////////////////////////////////////////////////////
+	/// <summary>
+	/// If true, use moveSpeedShift.
+	/// </summary>
+	public bool shift
+	{
+		get { return shiftActive; }
+		set { shiftActive = value; }
+	}
+
+	///////////////////////////////////////////////////////////////////////////
 	void Awake()
 	{
 		rbody = GetComponent<Rigidbody2D>();
@@ -48,19 +60,21 @@ public class MovementController : MonoBehaviour
 	///////////////////////////////////////////////////////////////////////////
 	void FixedUpdate()
 	{
-		Vector2 move = moveDir * moveSpeed;
+		float speed = shiftActive ? moveSpeedShift : moveSpeed;
+		Vector2 move = moveDir * speed;
 
 		rbody.MovePosition(rbody.position + (move * Time.fixedDeltaTime));
-
-		if (rotationSpeed == 0f)
+		
+		if (Mathf.Approximately(rotationSpeed, 0f))
 		{
 			rbody.SetRotation(Vector2.SignedAngle(Vector2.up, lookDir));
 		}
 		else
 		{
 			float ang = Vector2.SignedAngle(Vector2.up, lookDir);
-			float rot = Mathf.MoveTowardsAngle(rbody.rotation, ang,
-				rotationSpeed * Time.fixedDeltaTime);
+			float maxDelta = rotationSpeed * Time.fixedDeltaTime;
+			float rot = Mathf.MoveTowardsAngle(rbody.rotation, ang, maxDelta);
+
 			rbody.SetRotation(rot);
 		}
 	}
@@ -77,7 +91,9 @@ public class MovementController : MonoBehaviour
 		rotationSpeed = degreesPerSec;
 
 		if (!Mathf.Approximately(lookDir.sqrMagnitude, 1f))
+		{
 			lookDir.Normalize();
+		}
 	}
 
 	///////////////////////////////////////////////////////////////////////////
@@ -101,6 +117,7 @@ public class MovementController : MonoBehaviour
 	public void LookTowards(Vector3 worldCoord, float degreesPerSec = 0f)
 	{
 		Vector2 dir = worldCoord - transform.position;
+
 		LookTowardsDirection(dir, degreesPerSec);
 	}
 
@@ -125,7 +142,9 @@ public class MovementController : MonoBehaviour
 		moveDir = direction;
 
 		if (moveDir.sqrMagnitude > 1)
+		{
 			moveDir.Normalize();
+		}
 	}
 
 	///////////////////////////////////////////////////////////////////////////

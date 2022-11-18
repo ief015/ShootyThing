@@ -66,12 +66,12 @@ public class WeaponProjectile : MonoBehaviour
 
 			var wielder = GetComponent<Character>();
 
-            Projectile p = obj.GetComponent<Projectile>();
+			Projectile p = obj.GetComponent<Projectile>();
 			p.parent = this;
-            p.faction = wielder.faction;
-            p.characterClass = wielder.characterClass;
-            p.damage = damage;
-            p.timeToLive = projectileLifetime;
+			p.faction = wielder.faction;
+			p.characterClass = wielder.characterClass;
+			p.damage = damage;
+			p.timeToLive = projectileLifetime;
 
 			if (spreadDegrees > 0f)
 			{
@@ -86,9 +86,9 @@ public class WeaponProjectile : MonoBehaviour
 
 			projectiles.Add(p);
 
-        }
+		}
 
-        OnShoot?.Invoke(projectiles.ToArray());
+		OnShoot?.Invoke(projectiles.ToArray());
 	}
 
 	///////////////////////////////////////////////////////////////////////////
@@ -109,6 +109,6 @@ public class WeaponProjectile : MonoBehaviour
 		float x = Mathf.Cos(deg * Mathf.Deg2Rad);
 		float y = Mathf.Sin(deg * Mathf.Deg2Rad);
 
-        return new Vector2(x, y);
+		return new Vector2(x, y);
 	}
 }

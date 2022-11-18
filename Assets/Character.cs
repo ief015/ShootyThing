@@ -33,7 +33,7 @@ public class Character : MonoBehaviour
 		var faction = this.faction == "" ? "[No Faction]" : this.faction;
 		var charClass = characterClass == "" ? "[No Class]" : characterClass;
 
-        return base.ToString() + ":" + faction + "." + charClass;
+		return base.ToString() + ":" + faction + "." + charClass;
 	}
 
 	///////////////////////////////////////////////////////////////////////////

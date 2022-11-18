@@ -45,7 +45,7 @@ public class AIBehaviour : MonoBehaviour
 
 		self.OnDamaged += OnDamaged;
 		weapon.OnShoot += OnShoot;
-    }
+	}
 
 	///////////////////////////////////////////////////////////////////////////
 	void Start()
@@ -106,7 +106,7 @@ public class AIBehaviour : MonoBehaviour
 				{
 					targetLastSeenPositionVisited = true;
 					wanderTimeout = Time.time + wanderTimeSeconds;
-                }
+				}
 			}
 		}
 	}
@@ -119,12 +119,12 @@ public class AIBehaviour : MonoBehaviour
 			StopMoving();
 			weapon.StopFire();
 
-            if (FindTarget(false))
-            {
-                //Debug.Log(self + " found target: " + target);
-            }
+			if (FindTarget(false))
+			{
+				//Debug.Log(self + " found target: " + target);
+			}
 
-            return;
+			return;
 		}
 
 		if (seesTarget)
@@ -150,9 +150,9 @@ public class AIBehaviour : MonoBehaviour
 				if (targetLastSeenPositionVisited)
 				{
 					if (Time.time < wanderTimeout)
-                    {
-                        // Wander a bit, as if searching for target nearby
-                        Wander();
+					{
+						// Wander a bit, as if searching for target nearby
+						Wander();
 					}
 					else
 					{
@@ -268,31 +268,31 @@ public class AIBehaviour : MonoBehaviour
 		}
 
 		return null;
-    }
+	}
 
-    ///////////////////////////////////////////////////////////////////////////
-    public void SetTarget(Character ch)
-    {
-        targetLastSeenPosition = ch.position;
-        targetLastSeenPositionVisited = false;
-        target = ch;
-    }
+	///////////////////////////////////////////////////////////////////////////
+	public void SetTarget(Character ch)
+	{
+		targetLastSeenPosition = ch.position;
+		targetLastSeenPositionVisited = false;
+		target = ch;
+	}
 
-    ///////////////////////////////////////////////////////////////////////////
-    public void ClearTarget()
-    {
-        target = null;
-    }
+	///////////////////////////////////////////////////////////////////////////
+	public void ClearTarget()
+	{
+		target = null;
+	}
 
-    ///////////////////////////////////////////////////////////////////////////
-    /// <summary>
-    /// Check if a character 'ch' can be seen.
-    /// Returns true if 'ch' is in line of sight.
-    /// Field of view is also checked if 'ch' is not the current target.
-    /// </summary>
-    /// <param name="ch">Target</param>
-    /// <returns></returns>
-    public bool CanSee(Character ch)
+	///////////////////////////////////////////////////////////////////////////
+	/// <summary>
+	/// Check if a character 'ch' can be seen.
+	/// Returns true if 'ch' is in line of sight.
+	/// Field of view is also checked if 'ch' is not the current target.
+	/// </summary>
+	/// <param name="ch">Target</param>
+	/// <returns></returns>
+	public bool CanSee(Character ch)
 	{
 		return ((target != ch) || InFieldOfView(ch)) && InLineOfSight(ch);
 	}
@@ -307,7 +307,7 @@ public class AIBehaviour : MonoBehaviour
 	public bool InLineOfSight(Character ch)
 	{
 		int mask = ~LayerMask.GetMask("Character");
-        RaycastHit2D hit = Physics2D.Linecast(self.position, ch.position, mask);
+		RaycastHit2D hit = Physics2D.Linecast(self.position, ch.position, mask);
 
 		return hit.collider == null || hit.collider.transform == ch.transform;
 	}
@@ -354,55 +354,55 @@ public class AIBehaviour : MonoBehaviour
 		else if (timeout == 0f)
 		{
 			moveStopTimestamp = float.PositiveInfinity;
-        }
+		}
 
-        moveDestination = destination;
+		moveDestination = destination;
 		moveMinDistance = Mathf.Max(0f, minDistance);
 		moveStopTimestamp = Time.time + timeout;
 
 		movement.LookTowards(moveDestination, 360f);
 
 		isMoving = true;
-    }
+	}
 
-    ///////////////////////////////////////////////////////////////////////////
-    /// <summary>
-    /// Move towards a random nearby spot.
-    /// </summary>
-    public void Wander()
-    {
-        MoveTowards(self.position
-            + Random.insideUnitCircle.normalized * travelDistance,
-            0.5f, Random.Range(0.25f, 1f));
-    }
+	///////////////////////////////////////////////////////////////////////////
+	/// <summary>
+	/// Move towards a random nearby spot.
+	/// </summary>
+	public void Wander()
+	{
+		MoveTowards(self.position
+			+ Random.insideUnitCircle.normalized * travelDistance,
+			0.5f, Random.Range(0.25f, 1f));
+	}
 
-    ///////////////////////////////////////////////////////////////////////////
-    /// <summary>
-    /// Move towards the target a little bit.
-    /// </summary>
-    public void AdvanceTowardsTarget()
-    {
-        MoveTowards(targetLastSeenPosition
-            + Random.insideUnitCircle.normalized * travelDistance,
-            0.5f, Random.Range(0.25f, 1f));
-    }
+	///////////////////////////////////////////////////////////////////////////
+	/// <summary>
+	/// Move towards the target a little bit.
+	/// </summary>
+	public void AdvanceTowardsTarget()
+	{
+		MoveTowards(targetLastSeenPosition
+			+ Random.insideUnitCircle.normalized * travelDistance,
+			0.5f, Random.Range(0.25f, 1f));
+	}
 
-    ///////////////////////////////////////////////////////////////////////////
-    /// <summary>
-    /// Stop moving. Crazy, right?
-    /// </summary>
-    public void StopMoving()
+	///////////////////////////////////////////////////////////////////////////
+	/// <summary>
+	/// Stop moving. Crazy, right?
+	/// </summary>
+	public void StopMoving()
 	{
 		isMoving = false;
 	}
 
 	///////////////////////////////////////////////////////////////////////////
 	public void OnCollisionEnter2D(Collision2D collision)
-    {
-        //if (((1 << collision.gameObject.layer) & LayerMask.GetMask("Character")) != 0)
-        //{
-        //    Debug.Log(LayerMask.LayerToName(collision.gameObject.layer));
-        //    return;
+	{
+		//if (((1 << collision.gameObject.layer) & LayerMask.GetMask("Character")) != 0)
+		//{
+		//    Debug.Log(LayerMask.LayerToName(collision.gameObject.layer));
+		//    return;
 		//}
 
 		if (isMoving)
@@ -421,16 +421,16 @@ public class AIBehaviour : MonoBehaviour
 	{
 		if (inflictor && allowInfighting)
 		{
-             SetTarget(inflictor);
-        }
+			 SetTarget(inflictor);
+		}
 	}
 
-    ///////////////////////////////////////////////////////////////////////////
-    public void OnShoot(Projectile[] projectiles)
+	///////////////////////////////////////////////////////////////////////////
+	public void OnShoot(Projectile[] projectiles)
 	{
 		if (!weapon.automatic)
 		{
-            AdvanceTowardsTarget();
-        }
-    }
+			AdvanceTowardsTarget();
+		}
+	}
 }
